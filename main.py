@@ -8,7 +8,7 @@ WHITE = (255, 255, 255)
 FONT = pygame.font.Font(None, 36)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Quiz Game")
+pygame.display.set_caption("Quiz game") # nanti mau diganti jd sat prep test game
 
 questions = ("How many elements are in the periodic table?: ",
               "Which animal lays the largest eggs?: ",
