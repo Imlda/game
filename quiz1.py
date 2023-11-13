@@ -1,5 +1,6 @@
 import pygame
 import sys
+from pygame_menu import Menu, themes
 
 pygame.init()
 
@@ -8,56 +9,69 @@ WHITE = (255, 255, 255)
 FONT = pygame.font.Font(None, 36)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('Imelda\'s Quiz')
+pygame.display.set_caption("Imelda's Quiz")
 
 def display_message(text):
     message = FONT.render(text, True, (0, 0, 0))
-    screen.blit(message, (WIDTH//2 - message.get_width()//2, HEIGHT//2 - message.get_height()//2))
+    screen.fill(WHITE)
+    screen.blit(message, (WIDTH // 2 - message.get_width() // 2, HEIGHT // 2 - message.get_height() // 2))
     pygame.display.flip()
 
 def main():
     score = 0
     total_questions = 3
 
-    display_message("What is your favorite programming language?")
-    pygame.display.flip()
-    pygame.time.wait(1000)
-    answer = input("What is your favorite programming language?: ")
+    questions = [
+        "What is your favorite programming language?",
+        "Are you a student at IGS?",
+        "What is Imelda's age?"
+    ]
 
-    if answer.lower() == 'python':
-        score += 1
+    for question in questions:
+        display_message(question)
 
-    display_message("Are you a student at IGS?")
-    pygame.display.flip()
-    pygame.time.wait(1000)
-    answer = input("Are you a student at IGS?: ")
+        waiting_for_input = True
+        while waiting_for_input:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:  # Check for Enter key
+                        waiting_for_input = False
 
-    if answer.lower() == 'yes':
-        score += 1
+        pygame.time.wait(1000)
 
-    display_message("What is Imelda's age?")
-    pygame.display.flip()
-    pygame.time.wait(1000)
-    answer = input("What is Imelda's age?: ")
+        display_message("Type your answer:")
 
-    if answer == '15':
-        score += 1
+        menu = Menu(WIDTH, HEIGHT, 'Menu', theme=themes.THEME_DARK)
+
+        text_input = menu.add_text_input('Answer: ', textinput_id='answer', input_type=pygame_menu.locals.INPUT_TEXT, align=pygame_menu.locals.ALIGN_LEFT)
+
+        menu.mainloop(screen)
+
+        answer = text_input.get_value()
+
+        if question.lower() == "What is your favorite programming language?".lower() and answer.lower() == 'python':
+            score += 1
+        elif question.lower() == "Are you a student at IGS?".lower() and answer.lower() == 'yes':
+            score += 1
+        elif question.lower() == "What is Imelda's age?".lower() and answer == '15':
+            score += 1
 
     display_message(f"Thank you for playing this small quiz game! You answered {score} questions correctly!")
     mark = (score / total_questions) * 100
     print(f"Marks obtained: {mark}")
     display_message("Press any key to exit.")
 
-    pygame.display.flip()
-
-    waiting = True
-    while waiting:
+    waiting_for_input = True
+    while waiting_for_input:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-                waiting = False
+                waiting_for_input = False
 
 if __name__ == "__main__":
     main()
